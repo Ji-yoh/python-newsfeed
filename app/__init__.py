@@ -1,5 +1,7 @@
 from app.routes import home, dashboard # import the home & dashboard blueprint
 from flask import Flask
+from app.db import init_db
+from app.utils import filters
 
 def create_app(test_config=None):
     app = Flask(__name__, static_url_path='/')
@@ -16,5 +18,13 @@ def create_app(test_config=None):
     app.register_blueprint(home)
     # register dashboard blueprint here
     app.register_blueprint(dashboard)
+
+    # initialize database
+    init_db(app)
+
+    # register jinja filters
+    app.jinja_env.filters['format_url'] = filters.format_url
+    app.jinja_env.filters['format_date'] = filters.format_date
+    app.jinja_env.filters['format_plural'] = filters.format_plural
 
     return app
